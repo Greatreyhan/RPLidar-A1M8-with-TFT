@@ -140,15 +140,9 @@ int main(void)
 			while(1){
 				status = lidar_get_point(&lidar);
 				
-				long sumDegA = 0;
-				long sumDegB = 0;
-				long sumDegC = 0;
-				long sumDegD = 0;
-				int countA = 0;
-				int countB = 0;
-				int countC = 0;
-				int countD = 0;
-				for(int i =0; i < 90; i++){
+				long sumDegA = 0, sumDegB = 0, sumDegC = 0, sumDegD = 0, sumDegE = 0, sumDegF = 0, sumDegG=0, sumDegH=0;
+				int countA = 0, countB=0, countC=0, countD=0, countE=0, countF=0, countG=0, countH=0;
+				for(int i =0; i < 45; i++){
 					if(lidar.degA[i] > 0.1){
 						sumDegA += lidar.degA[i];
 						countA++;
@@ -165,29 +159,49 @@ int main(void)
 						sumDegD += lidar.degD[i];
 						countD++;
 					}
+					if(lidar.degE[i] > 0.1){
+						sumDegE += lidar.degE[i];
+						countE++;
+					}
+					if(lidar.degF[i] > 0.1){
+						sumDegF += lidar.degF[i];
+						countF++;
+					}
+					if(lidar.degG[i] > 0.1){
+						sumDegG += lidar.degG[i];
+						countG++;
+					}
+					if(lidar.degH[i] > 0.1){
+						sumDegH += lidar.degH[i];
+						countH++;
+					}
 				}
 				lidar.AVG[0] = sumDegA/countA;
 				lidar.AVG[1] = sumDegB/countB;
 				lidar.AVG[2] = sumDegC/countC;
 				lidar.AVG[3] = sumDegD/countD;
+				lidar.AVG[4] = sumDegE/countE;
+				lidar.AVG[5] = sumDegF/countF;
+				lidar.AVG[6] = sumDegG/countG;
+				lidar.AVG[7] = sumDegH/countH;
 				
-				HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET);
-				HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);		
-				HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
-				HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);					
-				
-				if(sumDegA/countA > 22){
-					HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_SET);
-				}
-				if(sumDegB/countB > 22){
-					HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);				
-				}
-				if(sumDegC/countC > 22){
-					HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);			
-				}
-				if(sumDegD/countD > 22){
-					HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET);		
-				}
+//				HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET);
+//				HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);		
+//				HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
+//				HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);					
+//				
+//				if(sumDegA/countA > 22){
+//					HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_SET);
+//				}
+//				if(sumDegB/countB > 22){
+//					HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);				
+//				}
+//				if(sumDegC/countC > 22){
+//					HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);			
+//				}
+//				if(sumDegD/countD > 22){
+//					HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET);		
+//				}
 				
 				if(status == LIDAR_OK){
 					if( lidar.distance > 0.1){

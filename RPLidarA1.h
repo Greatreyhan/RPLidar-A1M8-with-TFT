@@ -50,7 +50,7 @@
 #define Time_Receive 100
 
 // Special Command 
-#define LIDAR_AVG_OFFSET 45
+#define LIDAR_AVG_OFFSET 0
 
 typedef enum
 {
@@ -68,13 +68,17 @@ typedef struct __lidar_rec_Handle
 	uint8_t descriptor[7];
 	uint8_t start_scan_flag;
 	uint8_t quality;
-	float AVG[4];
+	float AVG[8];
 	float angle;
 	float distance;
-	float degA[90];
-	float degB[90];
-	float degC[90];
-	float degD[90];
+	float degA[45];
+	float degB[45];
+	float degC[45];
+	float degD[45];
+	float degE[45];
+	float degF[45];
+	float degG[45];
+	float degH[45];
 } lidar_HandleTypeDef;
 
 typedef struct{
