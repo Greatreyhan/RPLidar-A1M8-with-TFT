@@ -72,6 +72,7 @@ lidar_distance_angle_t value;
 lidar_conf_t conf;
 lidar_data_scan_t scan;
 lidar_angletodata_t data;
+
 int counter = 0;
 /* USER CODE END 0 */
 
@@ -114,6 +115,10 @@ int main(void)
 	lidar_setup(&lidar);
 	HAL_Delay(1000);
 	
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_6, GPIO_PIN_RESET);
+	HAL_Delay(10);
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_6, GPIO_PIN_SET);
+	
 	ILI9341_Init();
 	ILI9341_setRotation(2);
 	ILI9341_Fill(COLOR_BLACK);
@@ -133,6 +138,37 @@ int main(void)
 		if(status == LIDAR_OK){
 			while(1){
 				status = lidar_get_point(&lidar);
+				
+				long sumDegA = 0;
+				long sumDegB = 0;
+				long sumDegC = 0;
+				long sumDegD = 0;
+				int countA = 0;
+				int countB = 0;
+				int countC = 0;
+				int countD = 0;
+				for(int i =0; i < 90; i++){
+					if(lidar.degA[i] > 0.1){
+						sumDegA += lidar.degA[i];
+						countA++;
+					}
+					if(lidar.degB[i] > 0.1){
+						sumDegB += lidar.degB[i];
+						countB++;
+					}
+					if(lidar.degC[i] > 0.1){
+						sumDegC += lidar.degC[i];
+						countC++;
+					}
+					if(lidar.degD[i] > 0.1){
+						sumDegD += lidar.degD[i];
+						countD++;
+					}
+				}
+				lidar.AVG[0] = sumDegA/countA;
+				lidar.AVG[1] = sumDegB/countB;
+				lidar.AVG[2] = sumDegC/countC;
+				lidar.AVG[3] = sumDegD/countD;
 				if(status == LIDAR_OK){
 					if( lidar.distance > 0.1){
 //						data.angleToDistance[(int)floor(lidar.angle)]=lidar.distance;
@@ -309,12 +345,23 @@ static void MX_USART2_UART_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_6, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : PE6 */
+  GPIO_InitStruct.Pin = GPIO_PIN_6;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
 }
 
@@ -353,11 +400,11 @@ static void MX_FSMC_Init(void)
   hsram1.Init.PageSize = FSMC_PAGE_SIZE_NONE;
   /* Timing */
   Timing.AddressSetupTime = 6;
-  Timing.AddressHoldTime = 0;
+  Timing.AddressHoldTime = 15;
   Timing.DataSetupTime = 6;
   Timing.BusTurnAroundDuration = 0;
-  Timing.CLKDivision = 0;
-  Timing.DataLatency = 0;
+  Timing.CLKDivision = 16;
+  Timing.DataLatency = 17;
   Timing.AccessMode = FSMC_ACCESS_MODE_A;
   /* ExtTiming */
 

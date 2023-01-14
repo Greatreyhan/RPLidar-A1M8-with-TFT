@@ -64,6 +64,28 @@ lidar_StatusTypeDef lidar_get_point(lidar_HandleTypeDef* lidar){
 		lidar->distance = ((lidar->buff[3] | (lidar->buff[4]<<8))/4.0)/10; // centimeters
 		lidar->start_scan_flag = lidar->buff[0] & 0x1;
 		lidar->quality = lidar->buff[0]>>2;
+		
+		// memperoleh seperempat data sudut 90
+		if((((lidar->buff[1] >> 1) | (lidar->buff[2] << 7))/64.0) >= (0+LIDAR_AVG_OFFSET) && ((((lidar->buff[1] >> 1) | (lidar->buff[2] << 7))/64.0) <= (90+LIDAR_AVG_OFFSET) )){
+			lidar->degA[(int)floor((((lidar->buff[1] >> 1) | (lidar->buff[2] << 7))/64.0)-LIDAR_AVG_OFFSET)] = ((lidar->buff[3] | (lidar->buff[4]<<8))/4.0)/10;
+		}
+		// memperoleh seperempat data sudut 180
+		else if((((lidar->buff[1] >> 1) | (lidar->buff[2] << 7))/64.0) >= (90+LIDAR_AVG_OFFSET) && ((((lidar->buff[1] >> 1) | (lidar->buff[2] << 7))/64.0) <= (180+LIDAR_AVG_OFFSET) )){
+			lidar->degB[(int)floor((((lidar->buff[1] >> 1) | (lidar->buff[2] << 7))/64.0)-(LIDAR_AVG_OFFSET+90))] = ((lidar->buff[3] | (lidar->buff[4]<<8))/4.0)/10;
+		}
+		// memperoleh seperempat data sudut 270
+		else if((((lidar->buff[1] >> 1) | (lidar->buff[2] << 7))/64.0) >= (180+LIDAR_AVG_OFFSET) && ((((lidar->buff[1] >> 1) | (lidar->buff[2] << 7))/64.0) <= (270+LIDAR_AVG_OFFSET) )){
+			lidar->degC[(int)floor((((lidar->buff[1] >> 1) | (lidar->buff[2] << 7))/64.0)-(LIDAR_AVG_OFFSET+180))] = ((lidar->buff[3] | (lidar->buff[4]<<8))/4.0)/10;
+		}
+		// memperoleh seperempat data sudut 270
+		else if(((((lidar->buff[1] >> 1) | (lidar->buff[2] << 7))/64.0) >= (270+LIDAR_AVG_OFFSET) && ((((lidar->buff[1] >> 1) | (lidar->buff[2] << 7))/64.0) <= (360+LIDAR_AVG_OFFSET) )) || ((((lidar->buff[1] >> 1) | (lidar->buff[2] << 7))/64.0) >= (0) && ((((lidar->buff[1] >> 1) | (lidar->buff[2] << 7))/64.0) <= (LIDAR_AVG_OFFSET) ))){
+			if(((int)floor((((lidar->buff[1] >> 1) | (lidar->buff[2] << 7))/64.0)-(LIDAR_AVG_OFFSET+270))) > 0){
+				lidar->degD[(int)floor((((lidar->buff[1] >> 1) | (lidar->buff[2] << 7))/64.0)-(LIDAR_AVG_OFFSET+270))] = ((lidar->buff[3] | (lidar->buff[4]<<8))/4.0)/10;
+			}
+			else{
+				lidar->degD[(int)floor((((lidar->buff[1] >> 1) | (lidar->buff[2] << 7))/64.0)+LIDAR_AVG_OFFSET)] = ((lidar->buff[3] | (lidar->buff[4]<<8))/4.0)/10;
+			}
+		}
 	}
 	
 	return status;

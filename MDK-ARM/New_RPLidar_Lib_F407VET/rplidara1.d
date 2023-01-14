@@ -34,3 +34,4 @@ new_rplidar_lib_f407vet\rplidara1.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4
 new_rplidar_lib_f407vet\rplidara1.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 new_rplidar_lib_f407vet\rplidara1.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 new_rplidar_lib_f407vet\rplidara1.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
+new_rplidar_lib_f407vet\rplidara1.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h

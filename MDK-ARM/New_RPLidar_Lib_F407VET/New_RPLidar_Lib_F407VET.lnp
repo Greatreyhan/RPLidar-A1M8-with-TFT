@@ -1,10 +1,10 @@
 --cpu=Cortex-M4.fp.sp
 "new_rplidar_lib_f407vet\startup_stm32f407xx.o"
 "new_rplidar_lib_f407vet\rplidara1.o"
+"new_rplidar_lib_f407vet\ma_ili9341.o"
 "new_rplidar_lib_f407vet\main.o"
 "new_rplidar_lib_f407vet\stm32f4xx_it.o"
 "new_rplidar_lib_f407vet\stm32f4xx_hal_msp.o"
-"new_rplidar_lib_f407vet\ma_ili9341.o"
 "new_rplidar_lib_f407vet\stm32f4xx_ll_fsmc.o"
 "new_rplidar_lib_f407vet\stm32f4xx_hal_rcc.o"
 "new_rplidar_lib_f407vet\stm32f4xx_hal_rcc_ex.o"

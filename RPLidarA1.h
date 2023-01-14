@@ -5,6 +5,7 @@
  *      Author: Maulana Reyhan Savero
  */
  #include "main.h"
+ #include <math.h>
 
  
  #ifndef RPLIDARA1_H_
@@ -48,6 +49,9 @@
 #define Time_Transmit 100
 #define Time_Receive 100
 
+// Special Command 
+#define LIDAR_AVG_OFFSET 45
+
 typedef enum
 {
   LIDAR_OK       = 0x00U,
@@ -64,8 +68,13 @@ typedef struct __lidar_rec_Handle
 	uint8_t descriptor[7];
 	uint8_t start_scan_flag;
 	uint8_t quality;
+	float AVG[4];
 	float angle;
 	float distance;
+	float degA[90];
+	float degB[90];
+	float degC[90];
+	float degD[90];
 } lidar_HandleTypeDef;
 
 typedef struct{
