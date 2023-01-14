@@ -108,6 +108,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_FSMC_Init();
   /* USER CODE BEGIN 2 */
+
 	
 	TIM1->CCR1 = (100*1818/100);
 	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
@@ -169,6 +170,25 @@ int main(void)
 				lidar.AVG[1] = sumDegB/countB;
 				lidar.AVG[2] = sumDegC/countC;
 				lidar.AVG[3] = sumDegD/countD;
+				
+				HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET);
+				HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);		
+				HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
+				HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);					
+				
+				if(sumDegA/countA > 22){
+					HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_SET);
+				}
+				if(sumDegB/countB > 22){
+					HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);				
+				}
+				if(sumDegC/countC > 22){
+					HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);			
+				}
+				if(sumDegD/countD > 22){
+					HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET);		
+				}
+				
 				if(status == LIDAR_OK){
 					if( lidar.distance > 0.1){
 //						data.angleToDistance[(int)floor(lidar.angle)]=lidar.distance;
@@ -352,16 +372,27 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_6, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3|GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_1, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : PE6 */
-  GPIO_InitStruct.Pin = GPIO_PIN_6;
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : PE3 PE5 PE6 PE1 */
+  GPIO_InitStruct.Pin = GPIO_PIN_3|GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_1;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PB7 */
+  GPIO_InitStruct.Pin = GPIO_PIN_7;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 }
 
