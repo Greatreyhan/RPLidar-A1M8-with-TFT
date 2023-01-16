@@ -22,13 +22,12 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "RPLidarA1.h"
-#include "MA_ILI9341.h"
 #include <math.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+#define DIST_STOPPER 100
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -44,8 +43,7 @@
 TIM_HandleTypeDef htim1;
 
 UART_HandleTypeDef huart2;
-
-SRAM_HandleTypeDef hsram1;
+UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
 
@@ -56,7 +54,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_USART2_UART_Init(void);
-static void MX_FSMC_Init(void);
+static void MX_USART3_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -106,7 +104,7 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM1_Init();
   MX_USART2_UART_Init();
-  MX_FSMC_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
 
 	
@@ -119,16 +117,7 @@ int main(void)
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_6, GPIO_PIN_RESET);
 	HAL_Delay(10);
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_6, GPIO_PIN_SET);
-	
-	ILI9341_Init();
-	ILI9341_setRotation(2);
-	ILI9341_Fill(COLOR_BLACK);
-//	for(int i=0; i < 240; i++){
-//		for(int j = 0; j <320;j++){
-//			ILI9341_DrawPixel(j, i, COLOR_GREEN);
-//			HAL_Delay(1);
-//		}
-//	}
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -185,30 +174,38 @@ int main(void)
 				lidar.AVG[6] = sumDegG/countG;
 				lidar.AVG[7] = sumDegH/countH;
 				
-//				HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET);
-//				HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);		
-//				HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
-//				HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);					
-//				
-//				if(sumDegA/countA > 22){
-//					HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_SET);
-//				}
-//				if(sumDegB/countB > 22){
-//					HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);				
-//				}
-//				if(sumDegC/countC > 22){
-//					HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);			
-//				}
-//				if(sumDegD/countD > 22){
-//					HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET);		
-//				}
-				
-				if(status == LIDAR_OK){
-					if( lidar.distance > 0.1){
-//						data.angleToDistance[(int)floor(lidar.angle)]=lidar.distance;
-						ILI9341_DrawPixel(lidar.distance*(cos((lidar.angle*3.14)/180))+150, lidar.distance*(sin((lidar.angle*3.14)/180))+80, COLOR_GREEN);
-					}
+				uint8_t msg[] = {0x00};				
+				if(sumDegA/countA < DIST_STOPPER){
+					msg[0] |= 0x01;
 				}
+				if(sumDegB/countB < DIST_STOPPER){
+					msg[0] |= 0x02;
+				}
+				if(sumDegC/countC < DIST_STOPPER){
+					msg[0] |= 0x04;
+				}
+				if(sumDegD/countD < DIST_STOPPER){
+					msg[0] |= 0x08;
+				}
+				if(sumDegE/countE < DIST_STOPPER){
+					msg[0] |= 0x10;
+				}
+				if(sumDegF/countF < DIST_STOPPER){
+					msg[0] |= 0x20;
+				}
+				if(sumDegG/countG < DIST_STOPPER){
+					msg[0] |= 0x40;
+				}
+				if(sumDegA/countH < DIST_STOPPER){
+					msg[0] |= 0x80;
+				}
+				HAL_UART_Transmit(&huart3, msg, 1, 100);
+				
+//				if(status == LIDAR_OK){
+//					if( lidar.distance > 0.1){
+////						data.angleToDistance[(int)floor(lidar.angle)]=lidar.distance;
+//					}
+//				}
 			}
 		}
     /* USER CODE END WHILE */
@@ -373,6 +370,39 @@ static void MX_USART2_UART_Init(void)
 }
 
 /**
+  * @brief USART3 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART3_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART3_Init 0 */
+
+  /* USER CODE END USART3_Init 0 */
+
+  /* USER CODE BEGIN USART3_Init 1 */
+
+  /* USER CODE END USART3_Init 1 */
+  huart3.Instance = USART3;
+  huart3.Init.BaudRate = 115200;
+  huart3.Init.WordLength = UART_WORDLENGTH_8B;
+  huart3.Init.StopBits = UART_STOPBITS_1;
+  huart3.Init.Parity = UART_PARITY_NONE;
+  huart3.Init.Mode = UART_MODE_TX_RX;
+  huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART3_Init 2 */
+
+  /* USER CODE END USART3_Init 2 */
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -385,7 +415,6 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
@@ -408,59 +437,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-}
-
-/* FSMC initialization function */
-static void MX_FSMC_Init(void)
-{
-
-  /* USER CODE BEGIN FSMC_Init 0 */
-
-  /* USER CODE END FSMC_Init 0 */
-
-  FSMC_NORSRAM_TimingTypeDef Timing = {0};
-
-  /* USER CODE BEGIN FSMC_Init 1 */
-
-  /* USER CODE END FSMC_Init 1 */
-
-  /** Perform the SRAM1 memory initialization sequence
-  */
-  hsram1.Instance = FSMC_NORSRAM_DEVICE;
-  hsram1.Extended = FSMC_NORSRAM_EXTENDED_DEVICE;
-  /* hsram1.Init */
-  hsram1.Init.NSBank = FSMC_NORSRAM_BANK1;
-  hsram1.Init.DataAddressMux = FSMC_DATA_ADDRESS_MUX_DISABLE;
-  hsram1.Init.MemoryType = FSMC_MEMORY_TYPE_SRAM;
-  hsram1.Init.MemoryDataWidth = FSMC_NORSRAM_MEM_BUS_WIDTH_8;
-  hsram1.Init.BurstAccessMode = FSMC_BURST_ACCESS_MODE_DISABLE;
-  hsram1.Init.WaitSignalPolarity = FSMC_WAIT_SIGNAL_POLARITY_LOW;
-  hsram1.Init.WrapMode = FSMC_WRAP_MODE_DISABLE;
-  hsram1.Init.WaitSignalActive = FSMC_WAIT_TIMING_BEFORE_WS;
-  hsram1.Init.WriteOperation = FSMC_WRITE_OPERATION_ENABLE;
-  hsram1.Init.WaitSignal = FSMC_WAIT_SIGNAL_DISABLE;
-  hsram1.Init.ExtendedMode = FSMC_EXTENDED_MODE_DISABLE;
-  hsram1.Init.AsynchronousWait = FSMC_ASYNCHRONOUS_WAIT_DISABLE;
-  hsram1.Init.WriteBurst = FSMC_WRITE_BURST_DISABLE;
-  hsram1.Init.PageSize = FSMC_PAGE_SIZE_NONE;
-  /* Timing */
-  Timing.AddressSetupTime = 6;
-  Timing.AddressHoldTime = 15;
-  Timing.DataSetupTime = 6;
-  Timing.BusTurnAroundDuration = 0;
-  Timing.CLKDivision = 16;
-  Timing.DataLatency = 17;
-  Timing.AccessMode = FSMC_ACCESS_MODE_A;
-  /* ExtTiming */
-
-  if (HAL_SRAM_Init(&hsram1, &Timing, NULL) != HAL_OK)
-  {
-    Error_Handler( );
-  }
-
-  /* USER CODE BEGIN FSMC_Init 2 */
-
-  /* USER CODE END FSMC_Init 2 */
 }
 
 /* USER CODE BEGIN 4 */

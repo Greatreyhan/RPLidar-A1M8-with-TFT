@@ -26,8 +26,6 @@ new_rplidar_lib_f407vet\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ha
 new_rplidar_lib_f407vet\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h
 new_rplidar_lib_f407vet\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
 new_rplidar_lib_f407vet\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
-new_rplidar_lib_f407vet\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h
-new_rplidar_lib_f407vet\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h
 new_rplidar_lib_f407vet\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 new_rplidar_lib_f407vet\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 new_rplidar_lib_f407vet\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
@@ -35,7 +33,3 @@ new_rplidar_lib_f407vet\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ha
 new_rplidar_lib_f407vet\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 new_rplidar_lib_f407vet\main.o: ../../New_RPLidar_Lib_F407VET/RPLidarA1.h
 new_rplidar_lib_f407vet\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
-new_rplidar_lib_f407vet\main.o: ../../New_RPLidar_Lib_F407VET/MA_ILI9341.h
-new_rplidar_lib_f407vet\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
-new_rplidar_lib_f407vet\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
-new_rplidar_lib_f407vet\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h

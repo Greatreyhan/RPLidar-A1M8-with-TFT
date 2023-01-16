@@ -25,8 +25,6 @@ new_rplidar_lib_f407vet\stm32f4xx_hal_cortex.o: ../Drivers/STM32F4xx_HAL_Driver/
 new_rplidar_lib_f407vet\stm32f4xx_hal_cortex.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h
 new_rplidar_lib_f407vet\stm32f4xx_hal_cortex.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
 new_rplidar_lib_f407vet\stm32f4xx_hal_cortex.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
-new_rplidar_lib_f407vet\stm32f4xx_hal_cortex.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sram.h
-new_rplidar_lib_f407vet\stm32f4xx_hal_cortex.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_fsmc.h
 new_rplidar_lib_f407vet\stm32f4xx_hal_cortex.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 new_rplidar_lib_f407vet\stm32f4xx_hal_cortex.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 new_rplidar_lib_f407vet\stm32f4xx_hal_cortex.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
